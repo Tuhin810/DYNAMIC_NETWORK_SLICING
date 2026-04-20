@@ -1,0 +1,60 @@
+{
+  "run_config": {
+    "scenario_name": "video_heavy",
+    "algorithm": "static",
+    "num_devices": 180,
+    "seed": 7,
+    "device_mix": {
+      "iot": 0.35,
+      "video": 0.55,
+      "emergency": 0.1
+    },
+    "background_load": {
+      "mMTC": 0.3,
+      "eMBB": 0.52,
+      "URLLC": 0.22
+    }
+  },
+  "scenario_description": "Video-heavy traffic stressing eMBB capacity.",
+  "overall_metrics": {
+    "overall_sla_violation_count": 126,
+    "overall_sla_violation_rate_pct": 70.0,
+    "fairness_index": 0.5432,
+    "utility_score": 0.1909
+  },
+  "slice_summary": {
+    "mMTC": {
+      "device_count": 70,
+      "avg_latency_ms": 81.346,
+      "p95_latency_ms": 88.206,
+      "p99_latency_ms": 88.397,
+      "avg_throughput_mbps": 0.496,
+      "avg_packet_loss_pct": 1.381,
+      "sla_violation_count": 39,
+      "sla_violation_rate_pct": 55.714,
+      "load_ratio": 0.561
+    },
+    "eMBB": {
+      "device_count": 87,
+      "avg_latency_ms": 188.348,
+      "p95_latency_ms": 214.631,
+      "p99_latency_ms": 215.56,
+      "avg_throughput_mbps": 5.838,
+      "avg_packet_loss_pct": 8.986,
+      "sla_violation_count": 87,
+      "sla_violation_rate_pct": 100.0,
+      "load_ratio": 3.18
+    },
+    "URLLC": {
+      "device_count": 23,
+      "avg_latency_ms": 7.073,
+      "p95_latency_ms": 9.703,
+      "p99_latency_ms": 9.765,
+      "avg_throughput_mbps": 5.533,
+      "avg_packet_loss_pct": 0.133,
+      "sla_violation_count": 0,
+      "sla_violation_rate_pct": 0.0,
+      "load_ratio": 0.709
+    }
+  }
+}

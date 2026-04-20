@@ -1,0 +1,60 @@
+{
+  "run_config": {
+    "scenario_name": "emergency_burst",
+    "algorithm": "static",
+    "num_devices": 180,
+    "seed": 18,
+    "device_mix": {
+      "iot": 0.5,
+      "video": 0.28,
+      "emergency": 0.22
+    },
+    "background_load": {
+      "mMTC": 0.32,
+      "eMBB": 0.38,
+      "URLLC": 0.34
+    }
+  },
+  "scenario_description": "Higher emergency share and elevated URLLC pressure.",
+  "overall_metrics": {
+    "overall_sla_violation_count": 169,
+    "overall_sla_violation_rate_pct": 93.889,
+    "fairness_index": 0.7009,
+    "utility_score": 0.2572
+  },
+  "slice_summary": {
+    "mMTC": {
+      "device_count": 89,
+      "avg_latency_ms": 92.159,
+      "p95_latency_ms": 98.134,
+      "p99_latency_ms": 98.305,
+      "avg_throughput_mbps": 0.543,
+      "avg_packet_loss_pct": 1.42,
+      "sla_violation_count": 89,
+      "sla_violation_rate_pct": 100.0,
+      "load_ratio": 0.751
+    },
+    "eMBB": {
+      "device_count": 49,
+      "avg_latency_ms": 114.793,
+      "p95_latency_ms": 130.214,
+      "p99_latency_ms": 130.94,
+      "avg_throughput_mbps": 7.45,
+      "avg_packet_loss_pct": 5.088,
+      "sla_violation_count": 49,
+      "sla_violation_rate_pct": 100.0,
+      "load_ratio": 2.094
+    },
+    "URLLC": {
+      "device_count": 42,
+      "avg_latency_ms": 11.266,
+      "p95_latency_ms": 13.83,
+      "p99_latency_ms": 14.77,
+      "avg_throughput_mbps": 4.349,
+      "avg_packet_loss_pct": 0.278,
+      "sla_violation_count": 31,
+      "sla_violation_rate_pct": 73.81,
+      "load_ratio": 1.224
+    }
+  }
+}

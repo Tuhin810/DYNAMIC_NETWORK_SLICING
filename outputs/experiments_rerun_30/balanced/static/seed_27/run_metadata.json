@@ -1,0 +1,60 @@
+{
+  "run_config": {
+    "scenario_name": "balanced",
+    "algorithm": "static",
+    "num_devices": 180,
+    "seed": 27,
+    "device_mix": {
+      "iot": 0.6,
+      "video": 0.3,
+      "emergency": 0.1
+    },
+    "background_load": {
+      "mMTC": 0.3,
+      "eMBB": 0.36,
+      "URLLC": 0.2
+    }
+  },
+  "scenario_description": "Balanced traffic mix close to nominal network conditions.",
+  "overall_metrics": {
+    "overall_sla_violation_count": 154,
+    "overall_sla_violation_rate_pct": 85.556,
+    "fairness_index": 0.6394,
+    "utility_score": 0.2262
+  },
+  "slice_summary": {
+    "mMTC": {
+      "device_count": 94,
+      "avg_latency_ms": 91.595,
+      "p95_latency_ms": 97.994,
+      "p99_latency_ms": 98.188,
+      "avg_throughput_mbps": 0.534,
+      "avg_packet_loss_pct": 1.413,
+      "sla_violation_count": 94,
+      "sla_violation_rate_pct": 100.0,
+      "load_ratio": 0.749
+    },
+    "eMBB": {
+      "device_count": 59,
+      "avg_latency_ms": 134.254,
+      "p95_latency_ms": 154.289,
+      "p99_latency_ms": 154.585,
+      "avg_throughput_mbps": 6.069,
+      "avg_packet_loss_pct": 6.1,
+      "sla_violation_count": 59,
+      "sla_violation_rate_pct": 100.0,
+      "load_ratio": 2.395
+    },
+    "URLLC": {
+      "device_count": 27,
+      "avg_latency_ms": 7.436,
+      "p95_latency_ms": 9.254,
+      "p99_latency_ms": 9.947,
+      "avg_throughput_mbps": 4.405,
+      "avg_packet_loss_pct": 0.116,
+      "sla_violation_count": 1,
+      "sla_violation_rate_pct": 3.704,
+      "load_ratio": 0.794
+    }
+  }
+}

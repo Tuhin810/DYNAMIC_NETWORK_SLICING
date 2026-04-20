@@ -1,0 +1,4 @@
+mode,slice_name,device_count,avg_latency_ms,p95_latency_ms,p99_latency_ms,avg_throughput_mbps,avg_packet_loss_pct,sla_violation_count,sla_violation_rate_pct,load_ratio
+dynamic,mMTC,91,213.673,227.157,227.414,1.817,4.583,91,100.0,1.63
+dynamic,eMBB,36,102.604,113.969,114.626,12.55,3.81,36,100.0,1.938
+dynamic,URLLC,53,20.475,25.693,28.596,4.003,0.529,53,100.0,1.935
