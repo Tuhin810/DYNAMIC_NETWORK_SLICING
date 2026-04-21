@@ -62,8 +62,8 @@ class PsdasConfig:
     """Control knobs for PSDAS and ablation toggles."""
 
     prediction_alpha: float = 0.35
-    debt_gain: float = 1.10
-    overload_guard: float = 0.92
+    debt_gain: float = 2.20
+    overload_guard: float = 0.85
     no_prediction: bool = False
     no_debt: bool = False
     fixed_weights: bool = False
@@ -138,8 +138,8 @@ def assign_psdas_slices(
     devices: Iterable[Device],
     background_load: Mapping[str, float] | None = None,
     prediction_alpha: float = 0.35,
-    debt_gain: float = 1.10,
-    overload_guard: float = 0.92,
+    debt_gain: float = 2.20,
+    overload_guard: float = 0.85,
     no_prediction: bool = False,
     no_debt: bool = False,
     fixed_weights: bool = False,
@@ -338,9 +338,19 @@ def _psdas_slice_score(
         throughput_penalty = max(0.0, (throughput_target - estimated_throughput) / throughput_target)
     loss_penalty = estimated_loss / max(0.1, loss_target)
 
+    # Keep high-rate video traffic on throughput-capable slices.
+    if device.type == "video" and slice_name != "eMBB":
+        throughput_penalty += 0.22
+
     mismatch_penalty = MISMATCH_COST[device.type][slice_name] / 40.0
     guard_penalty = max(0.0, projected_predicted - config.overload_guard) * 4.0
     overload_penalty = max(0.0, projected_now - 1.0) * 6.0
+
+    # Protect URLLC tail latency by discouraging additional load near saturation.
+    if slice_name == "URLLC":
+        urllc_soft_guard = max(0.0, config.overload_guard - 0.08)
+        guard_penalty += max(0.0, projected_predicted - urllc_soft_guard) * 5.5
+        guard_penalty += max(0.0, projected_now - 0.95) * 8.0
 
     weight_latency, weight_throughput, weight_loss = _psdas_objective_weights(
         device=device,
@@ -350,6 +360,14 @@ def _psdas_slice_score(
 
     debt_penalty = 0.0 if config.no_debt else debt[device.type][slice_name] * config.debt_gain
     preference_bonus = 0.25 if slice_name == PREFERRED_SLICE[device.type] else 0.0
+
+    # When URLLC is hot, allow controlled spillover of emergency traffic to eMBB.
+    if device.type == "emergency" and slice_name == "eMBB":
+        urllc_hot = predicted_load["URLLC"] > (config.overload_guard + 0.10)
+        embb_relief = projected_predicted + 0.12 < min(predicted_load["URLLC"], 0.98)
+        if urllc_hot and embb_relief:
+            mismatch_penalty *= 0.70
+            preference_bonus += 0.10
 
     return (
         (weight_latency * latency_penalty)
@@ -373,15 +391,15 @@ def _psdas_objective_weights(
         return 0.40, 0.35, 0.25
 
     base = {
-        1: [0.58, 0.24, 0.18],
-        2: [0.42, 0.36, 0.22],
-        3: [0.30, 0.48, 0.22],
+        1: [0.56, 0.26, 0.18],
+        2: [0.38, 0.42, 0.20],
+        3: [0.24, 0.56, 0.20],
     }[device.priority]
     debt_pressure = sum(debt[device.type].values()) / len(SLICES)
 
-    base[0] += min(0.25, 0.12 * debt_pressure)
-    base[2] += min(0.18, 0.08 * debt_pressure)
-    base[1] = max(0.10, base[1] - min(0.25, 0.15 * debt_pressure))
+    base[0] += min(0.18, 0.09 * debt_pressure)
+    base[2] += min(0.14, 0.06 * debt_pressure)
+    base[1] = max(0.14, base[1] - min(0.14, 0.08 * debt_pressure))
 
     total = base[0] + base[1] + base[2]
     return base[0] / total, base[1] / total, base[2] / total

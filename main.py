@@ -247,13 +247,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--debt-gain",
         type=float,
-        default=1.10,
+        default=2.20,
         help="PSDAS gain applied to SLA debt updates.",
     )
     parser.add_argument(
         "--overload-guard",
         type=float,
-        default=0.92,
+        default=0.85,
         help="PSDAS projected-load guard threshold.",
     )
     parser.add_argument(
