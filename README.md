@@ -35,6 +35,10 @@ It is designed as a modular base for final year engineering projects and early-s
 - Dynamic assignment using:
   - background network load
   - priority-aware scoring
+- PSDAS assignment using:
+  - EWMA load prediction
+  - SLA debt tracking per class/slice
+  - adaptive objective weighting
 - Simulates:
   - latency
   - throughput
@@ -68,8 +72,18 @@ Mode options:
 
 - `static`
 - `dynamic`
+- `psdas`
 - `compare`
 - `menu` (default)
+
+PSDAS tuning/ablation flags (with `--mode psdas`):
+
+- `--prediction-alpha`
+- `--debt-gain`
+- `--overload-guard`
+- `--psdas-no-prediction`
+- `--psdas-no-debt`
+- `--psdas-fixed-weights`
 
 ## Output
 
@@ -100,6 +114,25 @@ Key summary metrics include:
 - SLA violation count and rate
 - Jain fairness index
 - Utility score
+
+## Day 2 Research Pipeline (PSDAS + Ablations)
+
+Run static, dynamic, and PSDAS together:
+
+```bash
+python3 run_experiments.py --seed-count 10 --algorithms static dynamic psdas
+```
+
+Run PSDAS ablations (example: no prediction):
+
+```bash
+python3 run_experiments.py --algorithms psdas --seed-count 10 --psdas-no-prediction
+```
+
+Other ablation flags:
+
+- `--psdas-no-debt`
+- `--psdas-fixed-weights`
 
 ## Extension Ideas for Research
 

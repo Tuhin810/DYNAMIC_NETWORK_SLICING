@@ -14,7 +14,7 @@ from scenarios import (
     list_scenario_names,
 )
 from simulation import SimulationResult, simulate_network_performance
-from slicing import SLICES, assign_dynamic_slices, assign_static_slices
+from slicing import SLICES, assign_dynamic_slices, assign_psdas_slices, assign_static_slices
 
 
 def parse_args() -> argparse.Namespace:
@@ -29,8 +29,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--algorithms",
         nargs="+",
-        choices=["static", "dynamic"],
-        default=["static", "dynamic"],
+        choices=["static", "dynamic", "psdas"],
+        default=["static", "dynamic", "psdas"],
         help="Algorithms to evaluate.",
     )
     parser.add_argument(
@@ -57,6 +57,39 @@ def parse_args() -> argparse.Namespace:
         default="outputs/experiments",
         help="Directory for all experiment artifacts.",
     )
+    parser.add_argument(
+        "--prediction-alpha",
+        type=float,
+        default=0.35,
+        help="PSDAS EWMA smoothing factor in (0, 1].",
+    )
+    parser.add_argument(
+        "--debt-gain",
+        type=float,
+        default=1.10,
+        help="PSDAS gain applied to SLA debt updates.",
+    )
+    parser.add_argument(
+        "--overload-guard",
+        type=float,
+        default=0.92,
+        help="PSDAS projected-load guard threshold.",
+    )
+    parser.add_argument(
+        "--psdas-no-prediction",
+        action="store_true",
+        help="Ablation: disable EWMA prediction for PSDAS.",
+    )
+    parser.add_argument(
+        "--psdas-no-debt",
+        action="store_true",
+        help="Ablation: disable SLA debt tracking for PSDAS.",
+    )
+    parser.add_argument(
+        "--psdas-fixed-weights",
+        action="store_true",
+        help="Ablation: use fixed objective weights for PSDAS.",
+    )
     return parser.parse_args()
 
 
@@ -74,6 +107,14 @@ def main() -> None:
         scenario = get_scenario_preset(scenario_name)
 
         for algorithm in args.algorithms:
+            algorithm_label = algorithm
+            if algorithm == "psdas":
+                algorithm_label = _psdas_algorithm_label(
+                    no_prediction=args.psdas_no_prediction,
+                    no_debt=args.psdas_no_debt,
+                    fixed_weights=args.psdas_fixed_weights,
+                )
+
             for seed in seeds:
                 num_devices = scenario.num_devices if args.devices is None else args.devices
                 if num_devices < 100:
@@ -81,7 +122,7 @@ def main() -> None:
 
                 config = ExperimentRunConfig(
                     scenario_name=scenario.name,
-                    algorithm=algorithm,
+                    algorithm=algorithm_label,
                     num_devices=num_devices,
                     seed=seed,
                     device_mix=scenario.device_mix,
@@ -96,26 +137,47 @@ def main() -> None:
 
                 if algorithm == "static":
                     assignments = assign_static_slices(devices)
-                else:
+                elif algorithm == "dynamic":
                     assignments = assign_dynamic_slices(
                         devices=devices,
                         background_load=scenario.background_load,
+                    )
+                else:
+                    assignments = assign_psdas_slices(
+                        devices=devices,
+                        background_load=scenario.background_load,
+                        prediction_alpha=args.prediction_alpha,
+                        debt_gain=args.debt_gain,
+                        overload_guard=args.overload_guard,
+                        no_prediction=args.psdas_no_prediction,
+                        no_debt=args.psdas_no_debt,
+                        fixed_weights=args.psdas_fixed_weights,
                     )
 
                 result = simulate_network_performance(
                     devices=devices,
                     assignments=assignments,
-                    mode=algorithm,
+                    mode=algorithm_label,
                     seed=seed + 500,
                     background_load=scenario.background_load,
                 )
 
-                run_dir = output_root / scenario.name / algorithm / f"seed_{seed}"
+                run_dir = output_root / scenario.name / algorithm_label / f"seed_{seed}"
                 _export_run_artifacts(
                     run_dir=run_dir,
                     config=config,
                     scenario_description=scenario.description,
                     result=result,
+                    psdas_params={
+                        "prediction_alpha": args.prediction_alpha,
+                        "debt_gain": args.debt_gain,
+                        "overload_guard": args.overload_guard,
+                        "no_prediction": args.psdas_no_prediction,
+                        "no_debt": args.psdas_no_debt,
+                        "fixed_weights": args.psdas_fixed_weights,
+                    }
+                    if algorithm == "psdas"
+                    else None,
                 )
                 run_rows.append(_flatten_run_row(config=config, result=result))
 
@@ -141,6 +203,7 @@ def _export_run_artifacts(
     config: ExperimentRunConfig,
     scenario_description: str,
     result: SimulationResult,
+    psdas_params: dict[str, object] | None = None,
 ) -> None:
     """Writes per-run CSV and JSON artifacts required for reproducibility."""
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -151,6 +214,7 @@ def _export_run_artifacts(
     metadata = {
         "run_config": config.as_dict(),
         "scenario_description": scenario_description,
+        "psdas_params": psdas_params,
         "overall_metrics": {
             "overall_sla_violation_count": result.overall_sla_violation_count,
             "overall_sla_violation_rate_pct": result.overall_sla_violation_rate_pct,
@@ -287,7 +351,7 @@ def _write_baseline_markdown(output_root: Path, run_rows: list[dict[str, object]
         grouped.setdefault(key, []).append(row)
 
     lines = [
-        "# Baseline Comparison (Day 1)",
+        "# Algorithm Comparison",
         "",
         "| Scenario | Algorithm | SLA Violation (%) | Fairness | Utility | URLLC p95 Latency (ms) |",
         "|---|---:|---:|---:|---:|---:|",
@@ -306,6 +370,20 @@ def _write_baseline_markdown(output_root: Path, run_rows: list[dict[str, object]
 
     baseline_path = output_root / "baseline_comparison.md"
     baseline_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _psdas_algorithm_label(no_prediction: bool, no_debt: bool, fixed_weights: bool) -> str:
+    """Builds a deterministic PSDAS algorithm label including active ablations."""
+    suffixes: list[str] = []
+    if no_prediction:
+        suffixes.append("no_prediction")
+    if no_debt:
+        suffixes.append("no_debt")
+    if fixed_weights:
+        suffixes.append("fixed_weights")
+    if not suffixes:
+        return "psdas"
+    return f"psdas_{'_'.join(suffixes)}"
 
 
 if __name__ == "__main__":

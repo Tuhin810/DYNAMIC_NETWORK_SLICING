@@ -1,0 +1,4 @@
+mode,slice_name,device_count,avg_latency_ms,p95_latency_ms,p99_latency_ms,avg_throughput_mbps,avg_packet_loss_pct,sla_violation_count,sla_violation_rate_pct,load_ratio
+psdas_no_debt,mMTC,85,316.505,334.283,334.452,1.425,7.525,85,100.0,2.195
+psdas_no_debt,eMBB,55,116.741,138.857,139.198,6.058,4.403,55,100.0,2.26
+psdas_no_debt,URLLC,40,26.631,32.718,34.441,4.645,0.758,40,100.0,2.186

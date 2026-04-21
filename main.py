@@ -7,6 +7,7 @@ from simulation import SimulationResult, simulate_network_performance
 from slicing import (
     SLICES,
     assign_dynamic_slices,
+    assign_psdas_slices,
     assign_static_slices,
     default_background_load,
 )
@@ -18,13 +19,16 @@ def interactive_menu() -> str:
     print("\n5G Network Slicing Simulation Menu")
     print("1. Static slicing")
     print("2. Dynamic slicing")
-    print("3. Compare static vs dynamic")
+    print("3. PSDAS slicing")
+    print("4. Compare static vs dynamic")
 
-    choice = input("Select option [1-3]: ").strip()
+    choice = input("Select option [1-4]: ").strip()
     if choice == "1":
         return "static"
     if choice == "2":
         return "dynamic"
+    if choice == "3":
+        return "psdas"
     return "compare"
 
 
@@ -96,7 +100,18 @@ def _percent_change(old: float, new: float) -> float:
     return ((new - old) / old) * 100.0
 
 
-def run_mode(mode: str, num_devices: int, seed: int, output_dir: str) -> None:
+def run_mode(
+    mode: str,
+    num_devices: int,
+    seed: int,
+    output_dir: str,
+    prediction_alpha: float,
+    debt_gain: float,
+    overload_guard: float,
+    psdas_no_prediction: bool,
+    psdas_no_debt: bool,
+    psdas_fixed_weights: bool,
+) -> None:
     """Executes selected mode end-to-end."""
     if num_devices < 100:
         print("Requested devices < 100, using 100 to satisfy simulation requirement.")
@@ -130,6 +145,32 @@ def run_mode(mode: str, num_devices: int, seed: int, output_dir: str) -> None:
             background_load=background_load,
         )
         print_summary(dynamic_result)
+        return
+
+    if mode == "psdas":
+        psdas_assignments = assign_psdas_slices(
+            devices=devices,
+            background_load=background_load,
+            prediction_alpha=prediction_alpha,
+            debt_gain=debt_gain,
+            overload_guard=overload_guard,
+            no_prediction=psdas_no_prediction,
+            no_debt=psdas_no_debt,
+            fixed_weights=psdas_fixed_weights,
+        )
+        psdas_mode = _psdas_mode_label(
+            no_prediction=psdas_no_prediction,
+            no_debt=psdas_no_debt,
+            fixed_weights=psdas_fixed_weights,
+        )
+        psdas_result = simulate_network_performance(
+            devices=devices,
+            assignments=psdas_assignments,
+            mode=psdas_mode,
+            seed=seed + 3,
+            background_load=background_load,
+        )
+        print_summary(psdas_result)
         return
 
     static_assignments = assign_static_slices(devices)
@@ -175,7 +216,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--mode",
-        choices=["menu", "static", "dynamic", "compare"],
+        choices=["menu", "static", "dynamic", "psdas", "compare"],
         default="menu",
         help="Simulation mode. 'menu' shows an interactive selector.",
     )
@@ -197,8 +238,55 @@ def parse_args() -> argparse.Namespace:
         default="outputs",
         help="Directory to save generated graphs.",
     )
+    parser.add_argument(
+        "--prediction-alpha",
+        type=float,
+        default=0.35,
+        help="PSDAS EWMA smoothing factor in (0, 1].",
+    )
+    parser.add_argument(
+        "--debt-gain",
+        type=float,
+        default=1.10,
+        help="PSDAS gain applied to SLA debt updates.",
+    )
+    parser.add_argument(
+        "--overload-guard",
+        type=float,
+        default=0.92,
+        help="PSDAS projected-load guard threshold.",
+    )
+    parser.add_argument(
+        "--psdas-no-prediction",
+        action="store_true",
+        help="Ablation: disable EWMA prediction in PSDAS.",
+    )
+    parser.add_argument(
+        "--psdas-no-debt",
+        action="store_true",
+        help="Ablation: disable SLA debt in PSDAS.",
+    )
+    parser.add_argument(
+        "--psdas-fixed-weights",
+        action="store_true",
+        help="Ablation: use fixed objective weights in PSDAS.",
+    )
 
     return parser.parse_args()
+
+
+def _psdas_mode_label(no_prediction: bool, no_debt: bool, fixed_weights: bool) -> str:
+    """Builds a stable mode label for PSDAS and ablation variants."""
+    suffixes: list[str] = []
+    if no_prediction:
+        suffixes.append("no_prediction")
+    if no_debt:
+        suffixes.append("no_debt")
+    if fixed_weights:
+        suffixes.append("fixed_weights")
+    if not suffixes:
+        return "psdas"
+    return f"psdas_{'_'.join(suffixes)}"
 
 
 def main() -> None:
@@ -213,6 +301,12 @@ def main() -> None:
         num_devices=args.devices,
         seed=args.seed,
         output_dir=args.output_dir,
+        prediction_alpha=args.prediction_alpha,
+        debt_gain=args.debt_gain,
+        overload_guard=args.overload_guard,
+        psdas_no_prediction=args.psdas_no_prediction,
+        psdas_no_debt=args.psdas_no_debt,
+        psdas_fixed_weights=args.psdas_fixed_weights,
     )
 
 

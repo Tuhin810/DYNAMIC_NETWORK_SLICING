@@ -112,13 +112,13 @@ def simulate_network_performance(
         )
         latency_ms += rng.uniform(-2.0, 2.0)
 
-        if mode == "dynamic":
+        if _is_dynamic_mode(mode):
             latency_ms *= 0.92 if device.priority == 1 else 0.97
 
         efficiency = 1.0 - (0.22 * max(0.0, load_ratio - 0.70)) - (0.35 * congestion)
         efficiency += rng.uniform(-0.04, 0.04)
 
-        if mode == "dynamic":
+        if _is_dynamic_mode(mode):
             efficiency += 0.06 * ((4 - device.priority) / 3)
 
         efficiency = max(0.25, min(1.00, efficiency))
@@ -129,7 +129,7 @@ def simulate_network_performance(
             1.0 + (3.5 * congestion) + max(0.0, load_ratio - 0.80)
         )
 
-        if mode == "dynamic":
+        if _is_dynamic_mode(mode):
             packet_loss_pct *= 0.82
 
         packet_loss_pct += rng.uniform(-0.08, 0.12)
@@ -295,3 +295,9 @@ def _calculate_utility_score(metrics: list[DeviceMetrics]) -> float:
 
     score = (0.40 * throughput_component) + (0.35 * latency_component) + (0.25 * loss_component)
     return round(score, 4)
+
+
+def _is_dynamic_mode(mode: str) -> bool:
+    """Returns true for dynamic-style policies including PSDAS variants."""
+    normalized = mode.strip().lower()
+    return normalized == "dynamic" or normalized.startswith("psdas")
