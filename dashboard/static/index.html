@@ -9,15 +9,10 @@
       color-scheme: dark;
       --bg: #08111f;
       --bg-2: #0f1b30;
-      --card: rgba(13, 25, 45, 0.86);
       --line: rgba(149, 180, 255, 0.18);
       --text: #e8eefc;
       --muted: #8da2c9;
       --accent: #6de0ff;
-      --accent-2: #9a7dff;
-      --good: #60e7a8;
-      --warn: #ffcf70;
-      --bad: #ff7e91;
     }
 
     * { box-sizing: border-box; }
@@ -32,20 +27,13 @@
       min-height: 100vh;
     }
 
-    .shell {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 32px;
-    }
-
+    .shell { max-width: 1400px; margin: 0 auto; padding: 32px; }
     .hero {
       display: grid;
       grid-template-columns: 1.3fr 0.7fr;
       gap: 20px;
-      align-items: stretch;
       margin-bottom: 22px;
     }
-
     .panel {
       background: linear-gradient(180deg, rgba(15, 27, 48, 0.94), rgba(9, 16, 31, 0.92));
       border: 1px solid var(--line);
@@ -53,15 +41,9 @@
       box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
       backdrop-filter: blur(16px);
     }
-
-    .hero-main {
-      padding: 28px;
-    }
-
+    .hero-main { padding: 28px; }
     .eyebrow {
       display: inline-flex;
-      gap: 8px;
-      align-items: center;
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 0.18em;
@@ -69,13 +51,7 @@
       font-weight: 700;
       margin-bottom: 14px;
     }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(2rem, 4vw, 3.7rem);
-      line-height: 1.02;
-    }
-
+    h1 { margin: 0; font-size: clamp(2rem, 4vw, 3.7rem); line-height: 1.02; }
     .subtitle {
       margin-top: 14px;
       color: var(--muted);
@@ -83,169 +59,60 @@
       font-size: 1rem;
       line-height: 1.6;
     }
-
-    .status-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 18px;
-    }
-
+    .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
     .status-chip, .metric-card, .slice-card, .event-row {
       border: 1px solid var(--line);
       background: rgba(255, 255, 255, 0.03);
     }
-
-    .status-chip {
-      padding: 12px 14px;
-      border-radius: 18px;
-    }
-
-    .status-chip .label,
-    .metric-card .label,
-    .slice-card .label,
-    .event-meta {
+    .status-chip { padding: 12px 14px; border-radius: 18px; }
+    .label, .event-meta, .form-field label {
       color: var(--muted);
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
-
-    .status-chip .value,
-    .metric-card .value,
-    .slice-card .value {
+    .status-chip .value, .metric-card .value, .slice-card .value {
       margin-top: 8px;
       font-size: 1.15rem;
       font-weight: 700;
     }
-
-    .hero-side {
-      padding: 22px;
-      display: grid;
-      gap: 14px;
-    }
-
-    .metric-card {
-      border-radius: 20px;
-      padding: 18px;
-      min-height: 104px;
-    }
-
-    .metric-card .value {
-      font-size: 2rem;
-      color: var(--accent);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin: 18px 0 22px;
-    }
-
-    .slice-card {
-      border-radius: 22px;
-      padding: 20px;
-      min-height: 188px;
-    }
-
-    .slice-card header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .slice-pill {
-      border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-    }
-
-    .rows {
-      display: grid;
-      gap: 10px;
-    }
-
-    .row {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      font-size: 14px;
-      color: var(--muted);
-    }
-
+    .hero-side { padding: 22px; display: grid; gap: 14px; }
+    .metric-card { border-radius: 20px; padding: 18px; min-height: 104px; }
+    .metric-card .value { font-size: 2rem; color: var(--accent); }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 18px 0 22px; }
+    .slice-card { border-radius: 22px; padding: 20px; min-height: 188px; }
+    .slice-card header { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .slice-pill { border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; }
+    .rows { display: grid; gap: 10px; }
+    .row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--muted); }
     .row strong { color: var(--text); }
-
-    .lower {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 18px;
+    .lower { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 18px; }
+    .config, .table, .events { padding: 22px; }
+    .config h2, .table h2, .events h2 { margin: 0 0 12px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .form-field { display: grid; gap: 6px; }
+    .form-field input, .form-field select, .form-field textarea, .secondary-button { font: inherit; }
+    .form-field input, .form-field select, .form-field textarea {
+      width: 100%; border-radius: 14px; border: 1px solid rgba(149, 180, 255, 0.18);
+      background: rgba(255, 255, 255, 0.04); color: var(--text); padding: 12px 14px; outline: none;
     }
-
-    .table, .events {
-      padding: 22px;
+    .form-field textarea { min-height: 140px; resize: vertical; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .secondary-button {
+      border: 1px solid rgba(149, 180, 255, 0.18); border-radius: 999px; padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.04); color: var(--text); cursor: pointer; font-weight: 700;
     }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      overflow: hidden;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 12px 10px;
-      border-bottom: 1px solid rgba(149, 180, 255, 0.1);
-      font-size: 14px;
-    }
-
-    th {
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 12px;
-    }
-
-    .event-list {
-      display: grid;
-      gap: 12px;
-      max-height: 520px;
-      overflow: auto;
-      padding-right: 4px;
-    }
-
-    .event-row {
-      border-radius: 16px;
-      padding: 14px;
-    }
-
-    .event-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 6px;
-      font-size: 14px;
-    }
-
-    .event-top strong {
-      color: var(--accent);
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    @media (max-width: 1080px) {
-      .hero, .lower, .grid, .status-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .shell { padding: 18px; }
-    }
+    .command-box { min-height: 180px; white-space: pre-wrap; line-height: 1.45; }
+    .inline-note { color: var(--muted); font-size: 13px; line-height: 1.6; margin-top: 12px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid rgba(149, 180, 255, 0.1); font-size: 14px; }
+    th { color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px; }
+    .event-list { display: grid; gap: 12px; max-height: 520px; overflow: auto; padding-right: 4px; }
+    .event-row { border-radius: 16px; padding: 14px; }
+    .event-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; font-size: 14px; }
+    .event-top strong { color: var(--accent); }
+    .muted { color: var(--muted); }
+    @media (max-width: 1080px) { .hero, .lower, .grid, .status-grid, .form-grid { grid-template-columns: 1fr; } .shell { padding: 18px; } }
   </style>
 </head>
 <body>
@@ -253,72 +120,87 @@
     <section class="hero">
       <div class="panel hero-main">
         <div class="eyebrow">5G Slicing Control Room</div>
-        <h1>Live sensor stream, slice assignment, and QoS telemetry in one dashboard.</h1>
+        <h1>Live sensor data, slice assignment, and QoS telemetry in one dashboard.</h1>
         <p class="subtitle">
-          Virtual sensors connect through a socket feed, the backend slices the stream into mMTC, eMBB,
-          and URLLC, and this dashboard refreshes the results in real time.
+          Adafruit IO feeds are polled on a schedule, the latest sensor value is converted into the
+          slicing pipeline, and the dashboard refreshes the result in real time.
         </p>
 
         <div class="status-grid">
-          <div class="status-chip">
-            <div class="label">Current policy</div>
-            <div class="value" id="policy">Loading...</div>
-          </div>
-          <div class="status-chip">
-            <div class="label">Live status</div>
-            <div class="value" id="status">Loading...</div>
-          </div>
-          <div class="status-chip">
-            <div class="label">Last update</div>
-            <div class="value" id="updated_at">Loading...</div>
-          </div>
-          <div class="status-chip">
-            <div class="label">Background load</div>
-            <div class="value" id="background_load">Loading...</div>
-          </div>
+          <div class="status-chip"><div class="label">Current policy</div><div class="value" id="policy">Loading...</div></div>
+          <div class="status-chip"><div class="label">Live status</div><div class="value" id="status">Loading...</div></div>
+          <div class="status-chip"><div class="label">Last update</div><div class="value" id="updated_at">Loading...</div></div>
+          <div class="status-chip"><div class="label">Adafruit source</div><div class="value" id="background_load">Loading...</div></div>
         </div>
       </div>
 
       <aside class="panel hero-side">
-        <div class="metric-card">
-          <div class="label">Sensor events</div>
-          <div class="value" id="total_messages">0</div>
-        </div>
-        <div class="metric-card">
-          <div class="label">Fairness index</div>
-          <div class="value" id="fairness_index">0.0000</div>
-        </div>
-        <div class="metric-card">
-          <div class="label">Utility score</div>
-          <div class="value" id="utility_score">0.0000</div>
-        </div>
+        <div class="metric-card"><div class="label">Sensor events</div><div class="value" id="total_messages">0</div></div>
+        <div class="metric-card"><div class="label">Fairness index</div><div class="value" id="fairness_index">0.0000</div></div>
+        <div class="metric-card"><div class="label">Utility score</div><div class="value" id="utility_score">0.0000</div></div>
       </aside>
     </section>
 
     <section class="grid" id="slice-grid"></section>
 
     <section class="lower">
-      <div class="panel table">
-        <h2 style="margin-top:0;">Slice summary</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Slice</th>
-              <th>Devices</th>
-              <th>Latency p95</th>
-              <th>Throughput</th>
-              <th>SLA Rate</th>
-              <th>Load</th>
-            </tr>
-          </thead>
-          <tbody id="summary-body"></tbody>
-        </table>
+      <div class="panel config">
+        <h2>Adafruit IO configuration</h2>
+        <p class="muted" style="margin-top:0;">
+          Configure your account and feeds here, then copy the generated launch command.
+        </p>
+        <div class="form-grid">
+          <div class="form-field"><label for="cfg_username">Adafruit username</label><input id="cfg_username" name="cfg_username" placeholder="your_username" /></div>
+          <div class="form-field"><label for="cfg_key">AIO key</label><input id="cfg_key" name="cfg_key" placeholder="aio_xxx" /></div>
+          <div class="form-field"><label for="cfg_interval">Poll interval (seconds)</label><input id="cfg_interval" name="cfg_interval" type="number" step="1" min="5" value="30" /></div>
+          <div class="form-field"><label for="cfg_policy">Policy</label>
+            <select id="cfg_policy" name="cfg_policy">
+              <option value="psdas" selected>psdas</option>
+              <option value="dynamic">dynamic</option>
+              <option value="static">static</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-field" style="margin-top:12px;">
+          <label for="cfg_feeds">Adafruit feeds</label>
+          <textarea id="cfg_feeds" name="cfg_feeds" placeholder="temperature&#10;humidity:iot:2:1.0:room-humidity&#10;alarm:emergency:1:5.0:alarm-feed"></textarea>
+        </div>
+
+        <div class="toolbar">
+          <button type="button" id="save-config" class="secondary-button">Save settings</button>
+          <button type="button" id="load-config" class="secondary-button">Load saved</button>
+        </div>
+
+        <div class="inline-note" id="config-status">Stored locally in your browser only.</div>
+
+        <div class="form-field" style="margin-top:12px;">
+          <label for="launch-command">Launch command</label>
+          <textarea id="launch-command" class="command-box" readonly></textarea>
+        </div>
       </div>
 
       <div class="panel events">
         <h2 style="margin-top:0;">Recent sensors</h2>
         <div class="event-list" id="event-list"></div>
       </div>
+    </section>
+
+    <section class="panel table" style="margin-top:18px;">
+      <h2>Slice summary</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Slice</th>
+            <th>Devices</th>
+            <th>Latency p95</th>
+            <th>Throughput</th>
+            <th>SLA Rate</th>
+            <th>Load</th>
+          </tr>
+        </thead>
+        <tbody id="summary-body"></tbody>
+      </table>
     </section>
   </div>
 
@@ -328,21 +210,60 @@
       eMBB: 'linear-gradient(135deg, rgba(109, 224, 255, 0.18), rgba(109, 224, 255, 0.06))',
       URLLC: 'linear-gradient(135deg, rgba(255, 126, 145, 0.18), rgba(255, 126, 145, 0.06))',
     };
+    const storageKey = '5g-slicing-dashboard-config';
 
-    function formatNumber(value, digits = 3) {
-      return Number(value).toFixed(digits);
+    function formatNumber(value, digits = 3) { return Number(value || 0).toFixed(digits); }
+    function formatTimestamp(value) { if (!value) return 'waiting'; return new Date(value * 1000).toLocaleString(); }
+
+    function quoteShell(value) { return `'${String(value).replace(/'/g, "'\\''")}'`; }
+    function refreshCommand() {
+      const username = document.getElementById('cfg_username').value.trim();
+      const key = document.getElementById('cfg_key').value.trim();
+      const interval = Number(document.getElementById('cfg_interval').value || 30);
+      const policy = document.getElementById('cfg_policy').value;
+      const feeds = document.getElementById('cfg_feeds').value.split('\n').map((line) => line.trim()).filter(Boolean);
+      const parts = ['/Users/tuhin/coding/privet/project/.venv/bin/python', 'serve_dashboard.py', `--policy ${quoteShell(policy)}`, `--adafruit-poll-interval ${interval}`];
+      if (username) parts.push(`--adafruit-username ${quoteShell(username)}`);
+      if (key) parts.push(`--adafruit-key ${quoteShell(key)}`);
+      for (const feed of feeds) parts.push(`--adafruit-feed ${quoteShell(feed)}`);
+      document.getElementById('launch-command').value = parts.join(' ');
     }
 
-    function formatTimestamp(value) {
-      if (!value) return 'waiting';
-      return new Date(value * 1000).toLocaleString();
+    function saveConfig() {
+      localStorage.setItem(storageKey, JSON.stringify({
+        username: document.getElementById('cfg_username').value,
+        key: document.getElementById('cfg_key').value,
+        interval: document.getElementById('cfg_interval').value,
+        policy: document.getElementById('cfg_policy').value,
+        feeds: document.getElementById('cfg_feeds').value,
+      }));
+      document.getElementById('config-status').textContent = 'Settings saved locally in this browser.';
+      refreshCommand();
+    }
+
+    function loadConfig() {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) {
+        document.getElementById('config-status').textContent = 'No saved settings found.';
+        return;
+      }
+      try {
+        const config = JSON.parse(raw);
+        document.getElementById('cfg_username').value = config.username || '';
+        document.getElementById('cfg_key').value = config.key || '';
+        document.getElementById('cfg_interval').value = config.interval || 30;
+        document.getElementById('cfg_policy').value = config.policy || 'psdas';
+        document.getElementById('cfg_feeds').value = config.feeds || '';
+        document.getElementById('config-status').textContent = 'Settings loaded from browser storage.';
+        refreshCommand();
+      } catch {
+        document.getElementById('config-status').textContent = 'Saved settings are invalid.';
+      }
     }
 
     function backgroundSummary(backgroundLoad) {
-      if (!backgroundLoad) return 'waiting';
-      return Object.entries(backgroundLoad)
-        .map(([key, value]) => `${key}: ${formatNumber(value, 2)}`)
-        .join(' | ');
+      if (!backgroundLoad) return 'Adafruit IO';
+      return Object.entries(backgroundLoad).map(([key, value]) => `${key}: ${formatNumber(value, 2)}`).join(' | ');
     }
 
     function renderState(state) {
@@ -374,14 +295,14 @@
               <div class="label">Network slice</div>
               <div class="value">${sliceName}</div>
             </div>
-            <div class="slice-pill">${item.assigned_devices ?? item.device_count ?? 0} devices</div>
+            <div class="slice-pill">${item.device_count ?? 0} devices</div>
           </header>
           <div class="rows">
-            <div class="row"><span>Average latency</span><strong>${formatNumber(item.avg_latency_ms ?? 0)} ms</strong></div>
-            <div class="row"><span>P95 latency</span><strong>${formatNumber(item.p95_latency_ms ?? 0)} ms</strong></div>
-            <div class="row"><span>Throughput</span><strong>${formatNumber(item.avg_throughput_mbps ?? 0)} Mbps</strong></div>
-            <div class="row"><span>SLA violations</span><strong>${formatNumber(item.sla_violation_rate_pct ?? 0)}%</strong></div>
-            <div class="row"><span>Load ratio</span><strong>${formatNumber(item.load_ratio ?? 0)}</strong></div>
+            <div class="row"><span>Average latency</span><strong>${formatNumber(item.avg_latency_ms)} ms</strong></div>
+            <div class="row"><span>P95 latency</span><strong>${formatNumber(item.p95_latency_ms)} ms</strong></div>
+            <div class="row"><span>Throughput</span><strong>${formatNumber(item.avg_throughput_mbps)} Mbps</strong></div>
+            <div class="row"><span>SLA violations</span><strong>${formatNumber(item.sla_violation_rate_pct)}%</strong></div>
+            <div class="row"><span>Load ratio</span><strong>${formatNumber(item.load_ratio)}</strong></div>
           </div>
         `;
         sliceGrid.appendChild(card);
@@ -390,10 +311,10 @@
         tr.innerHTML = `
           <td><strong>${sliceName}</strong></td>
           <td>${item.device_count ?? 0}</td>
-          <td>${formatNumber(item.p95_latency_ms ?? 0)} ms</td>
-          <td>${formatNumber(item.avg_throughput_mbps ?? 0)} Mbps</td>
-          <td>${formatNumber(item.sla_violation_rate_pct ?? 0)}%</td>
-          <td>${formatNumber(item.load_ratio ?? 0)}</td>
+          <td>${formatNumber(item.p95_latency_ms)} ms</td>
+          <td>${formatNumber(item.avg_throughput_mbps)} Mbps</td>
+          <td>${formatNumber(item.sla_violation_rate_pct)}%</td>
+          <td>${formatNumber(item.load_ratio)}</td>
         `;
         summaryBody.appendChild(tr);
       }
@@ -415,21 +336,28 @@
       if (!(state.recent_readings || []).length) {
         const empty = document.createElement('div');
         empty.className = 'event-row';
-        empty.textContent = 'No sensor events yet. Start the socket client to stream virtual devices.';
+        empty.textContent = 'No sensor events yet. Configure Adafruit IO feeds to start streaming live data.';
         eventList.appendChild(empty);
       }
     }
 
-    async function refresh() {
-      try {
-        const response = await fetch('/api/state', { cache: 'no-store' });
-        const state = await response.json();
-        renderState(state);
-      } catch (error) {
-        console.error(error);
-      }
+    function bindConfigInputs() {
+      ['cfg_username', 'cfg_key', 'cfg_interval', 'cfg_policy', 'cfg_feeds'].forEach((fieldId) => {
+        document.getElementById(fieldId).addEventListener('input', refreshCommand);
+        document.getElementById(fieldId).addEventListener('change', refreshCommand);
+      });
+      document.getElementById('save-config').addEventListener('click', saveConfig);
+      document.getElementById('load-config').addEventListener('click', loadConfig);
     }
 
+    async function refresh() {
+      const response = await fetch('/api/state', { cache: 'no-store' });
+      renderState(await response.json());
+    }
+
+    bindConfigInputs();
+    refreshCommand();
+    loadConfig();
     refresh();
     setInterval(refresh, 1000);
   </script>

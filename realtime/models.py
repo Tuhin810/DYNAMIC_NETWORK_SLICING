@@ -9,7 +9,7 @@ from devices import Device
 
 @dataclass(frozen=True)
 class SensorReading:
-    """Normalized sensor event accepted by the realtime socket server."""
+    """Normalized sensor event accepted by the realtime ingest pipeline."""
 
     device_id: int
     sensor_id: str

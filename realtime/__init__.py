@@ -1,1 +1,1 @@
-"""Realtime ingest and socket transport for the dashboard demo."""
+"""Realtime ingest and dashboard transport for real sensor data."""

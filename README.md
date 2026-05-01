@@ -17,9 +17,10 @@ It is designed as a modular base for final year engineering projects and early-s
 - `visualization.py` - Matplotlib comparison graphs
 - `scenarios.py` - Fixed scenario presets and experiment run config objects
 - `run_experiments.py` - Reproducible batch experiment runner with CSV/JSON exports
-- `realtime/` - Socket-based virtual sensor ingest and live state store
+- `realtime/` - Real-time sensor ingest and live state store
 - `dashboard/` - Web dashboard server and HTML UI for live slicing telemetry
-- `serve_dashboard.py` - Starts the dashboard HTTP server and sensor socket server
+- `serve_dashboard.py` - Starts the dashboard HTTP server and Adafruit IO poller
+- `realtime/adafruit_io.py` - Adafruit IO feed poller for real sensor streams
 
 ## Slice Profiles
 
@@ -95,19 +96,37 @@ When running in `compare` mode, plots are saved in `outputs/`:
 - `latency_comparison.png`
 - `throughput_comparison.png`
 
-## Web Dashboard Demo
+## Web Dashboard
 
-Start the live dashboard and socket ingest server:
+Start the live dashboard:
 
 ```bash
-/Users/tuhin/coding/privet/project/.venv/bin/python serve_dashboard.py --demo
+/Users/tuhin/coding/privet/project/.venv/bin/python serve_dashboard.py
 ```
 
 Then open:
 
 - `http://127.0.0.1:8000`
 
-Send virtual sensor events through the socket stream with the built-in demo client, or connect your own client to `127.0.0.1:9100` and send line-delimited JSON payloads.
+## Configuration
+
+Use Adafruit IO as the live sensor data source. The dashboard also includes a configuration panel that generates the launch command for you:
+
+```bash
+/Users/tuhin/coding/privet/project/.venv/bin/python serve_dashboard.py \
+  --adafruit-username YOUR_ADAFRUIT_USERNAME \
+  --adafruit-key YOUR_AIO_KEY \
+  --adafruit-feed temperature \
+  --adafruit-feed humidity:iot:2:1.0:room-humidity
+```
+
+Feed mapping format:
+
+- `feed_key`
+- `feed_key:sensor_type:priority:data_rate_mbps`
+- `feed_key:sensor_type:priority:data_rate_mbps:sensor_id`
+
+The app polls the latest value from each Adafruit IO feed and pushes it into the same slicing and dashboard pipeline used by the REST input form. The dashboard configuration panel can save your settings locally and generate the launch command.
 
 ## Day 1 Research Pipeline
 

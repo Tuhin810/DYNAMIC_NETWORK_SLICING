@@ -17,6 +17,7 @@ from slicing import (
 )
 
 from realtime.models import SensorReading
+from realtime.models import reading_from_payload
 
 
 @dataclass(frozen=True)
@@ -38,7 +39,7 @@ class LiveSnapshot:
 
 
 class DashboardState:
-    """Thread-safe store for socket-ingested sensor readings and live metrics."""
+    """Thread-safe store for ingested sensor readings and live metrics."""
 
     def __init__(
         self,
@@ -67,6 +68,17 @@ class DashboardState:
         """Returns the current state as JSON-ready data."""
         with self._lock:
             return self._latest_snapshot.to_dict()
+
+    def ingest_payload(self, payload: dict[str, object]) -> dict[str, object]:
+        """Validates one REST payload and refreshes the live snapshot."""
+        reading = reading_from_payload(payload)
+        snapshot = self.update_sensor(reading)
+        return {
+            "ok": True,
+            "message": "ingested",
+            "reading": reading.to_dict(),
+            "snapshot": snapshot.to_dict(),
+        }
 
     def _build_empty_snapshot(self) -> LiveSnapshot:
         slice_summary = {
