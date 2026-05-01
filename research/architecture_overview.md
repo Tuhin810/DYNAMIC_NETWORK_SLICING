@@ -24,6 +24,28 @@ The project is not just a simulator. It is a full research artifact pipeline aro
 The flow is:
 `scenario -> device generation -> slicing policy -> simulation -> CSV/JSON outputs -> statistical analysis -> figures and paper draft`
 
+## Architecture Workflow
+
+```mermaid
+flowchart TD
+	A[Scenario preset or CLI input] --> B[Generate virtual devices]
+	B --> C[Choose slicing policy]
+	C --> D[Static slicing]
+	C --> E[Dynamic slicing]
+	C --> F[PSDAS slicing]
+	D --> G[Simulate network performance]
+	E --> G
+	F --> G
+	G --> H[Per-device metrics]
+	G --> I[Per-slice summaries]
+	G --> J[Overall QoS metrics]
+	H --> K[CSV / JSON experiment outputs]
+	I --> K
+	J --> K
+	K --> L[Batch aggregation and statistics]
+	L --> M[Figures, tables, and paper draft]
+```
+
 ## Outputs
 The repository produces:
 - Per-run device metrics CSV files

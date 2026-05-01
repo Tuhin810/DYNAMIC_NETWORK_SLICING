@@ -17,6 +17,9 @@ It is designed as a modular base for final year engineering projects and early-s
 - `visualization.py` - Matplotlib comparison graphs
 - `scenarios.py` - Fixed scenario presets and experiment run config objects
 - `run_experiments.py` - Reproducible batch experiment runner with CSV/JSON exports
+- `realtime/` - Socket-based virtual sensor ingest and live state store
+- `dashboard/` - Web dashboard server and HTML UI for live slicing telemetry
+- `serve_dashboard.py` - Starts the dashboard HTTP server and sensor socket server
 
 ## Slice Profiles
 
@@ -91,6 +94,20 @@ When running in `compare` mode, plots are saved in `outputs/`:
 
 - `latency_comparison.png`
 - `throughput_comparison.png`
+
+## Web Dashboard Demo
+
+Start the live dashboard and socket ingest server:
+
+```bash
+/Users/tuhin/coding/privet/project/.venv/bin/python serve_dashboard.py --demo
+```
+
+Then open:
+
+- `http://127.0.0.1:8000`
+
+Send virtual sensor events through the socket stream with the built-in demo client, or connect your own client to `127.0.0.1:9100` and send line-delimited JSON payloads.
 
 ## Day 1 Research Pipeline
 
