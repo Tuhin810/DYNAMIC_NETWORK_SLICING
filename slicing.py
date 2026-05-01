@@ -162,6 +162,7 @@ def assign_psdas_slices(
     current_rate = {slice_name: 0.0 for slice_name in SLICES}
     current_count = {slice_name: 0 for slice_name in SLICES}
     predicted_load = {slice_name: float(background_load[slice_name]) for slice_name in SLICES}
+    previous_load = dict(predicted_load)
     debt = {
         traffic_class: {slice_name: 0.0 for slice_name in SLICES}
         for traffic_class in ("iot", "video", "emergency")
@@ -180,13 +181,16 @@ def assign_psdas_slices(
         if config.no_prediction:
             predicted_load = dict(current_load)
         else:
+            # One-step trend-aware forecast: current EWMA level plus short-horizon trend.
             predicted_load = {
-                slice_name: (
-                    (config.prediction_alpha * current_load[slice_name])
-                    + ((1.0 - config.prediction_alpha) * predicted_load[slice_name])
+                slice_name: max(
+                    0.0,
+                    current_load[slice_name]
+                    + (config.prediction_alpha * (current_load[slice_name] - previous_load[slice_name])),
                 )
                 for slice_name in SLICES
             }
+        previous_load = dict(current_load)
 
         best_slice = min(
             SLICES,
@@ -315,9 +319,10 @@ def _psdas_slice_score(
         return float("inf")
 
     projected_now = current_load[slice_name] + (device.data_rate / profile.bandwidth_capacity_mbps)
-    projected_predicted = projected_now if config.no_prediction else max(
-        projected_now,
-        (0.65 * predicted_load[slice_name]) + (0.35 * projected_now),
+    projected_predicted = (
+        projected_now
+        if config.no_prediction
+        else max(0.0, (0.55 * projected_now) + (0.45 * predicted_load[slice_name]))
     )
 
     estimated_latency, estimated_throughput, estimated_loss = _estimate_projected_metrics(
